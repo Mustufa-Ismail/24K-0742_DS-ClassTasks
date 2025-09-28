@@ -96,5 +96,18 @@ int main()
     {
         cout << "No solution found";
     }
+
+    for (int i = 0; i < n; i++)
+    {
+        delete[] arr[i];
+    }
+    delete[] arr;
+
+    for (int i = 0; i < n; i++)
+    {
+        delete[] sol[i];
+    }
+    delete[] sol;
+
     return 0;
 }

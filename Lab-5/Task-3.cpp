@@ -18,7 +18,7 @@ bool findingPath(int **arr, int x, int y, int n, int **sol)
         return true;
     }
 
-    if (isSafe(arr, x, y, n,sol))
+    if (isSafe(arr, x, y, n, sol))
     {
         sol[x][y] = 1;
         if (findingPath(arr, x + 1, y, n, sol))
@@ -109,5 +109,19 @@ int main()
     {
         cout << "No solution found";
     }
+
+    for (int i = 0; i < n; i++)
+    {
+        delete[] arr[i];
+    }
+    delete[] arr;
+
+    for (int i = 0; i < n; i++)
+    {
+        delete[] sol[i];
+    }
+    delete[] sol;
+
+
     return 0;
 }
