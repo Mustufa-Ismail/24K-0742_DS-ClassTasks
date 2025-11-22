@@ -2,54 +2,114 @@
 
 using namespace std;
 
-class Node {
+class Node
+{
 public:
     int rollNo;
     string name;
 
-    Node(int r,string n) : rollNo(r),name(n){}
+    Node(string n, int r) : rollNo(r), name(n) {}
 };
 
-class HashTable {
+class HashTable
+{
 public:
-    Node* arr[15];
+    Node *arr[15];
+    int count;
 
-
-
-    int hashing(string s){
-		int sum = 0;
-		for(int i=0; i<s.length(); i++){
-			sum += (int)s[i];
-		}
-		return sum%100;
-	}
-
-    void insert(string s){
-        Node *nn = new Node(s);
-        int index = hashing(s);
-
-        if(arr[index] == nullptr){
-            arr[index] = nn;
-        }
-        else{
-            Node* temp = arr[index];
-            while(temp->next != nullptr){
-                temp = temp->next;
-            }
-            temp->next = nn;
+    HashTable() : count(0)
+    {
+        for (int i = 0; i < 15; i++)
+        {
+            arr[i] = nullptr;
         }
     }
-        
 
-    void display() {
-        for (int i = 0; i < 100; i++) {
-            cout << "Bucket " << i << ": ";
-            Node* temp = arr[i];
-            while (temp != NULL) {
-                cout << temp->key << " -> ";
-                temp = temp->next;
+    int hashing(int rollNo)
+    {
+        return rollNo % 15;
+    }
+
+    void insert(string n, int r)
+    {
+        if (count >= 15)
+        {
+            cout << "Table full";
+            return;
+        }
+
+        Node *nn = new Node(n, r);
+        int index = hashing(r);
+
+        if (arr[index] == nullptr)
+        {
+            arr[index] = nn;
+            count++;
+            return;
+        }
+
+        for (int i = 1; i < 15; i++)
+        {
+            int curIndex = (index + i * i) % 15;
+            if (arr[curIndex] == nullptr)
+            {
+                arr[curIndex] = nn;
+                count++;
+                return;
             }
-            cout << "NULL\n";
+        }
+    }
+
+    void searchRecord(int rollNo)
+    {
+        int index = hashing(rollNo);
+
+        for (int i = 0; i < 15; i++)
+        {
+            int curIndex = (index + i * i) % 15;
+
+            if (arr[curIndex] == nullptr)
+                continue;
+
+            if (arr[curIndex]->rollNo == rollNo)
+            {
+                cout << "Name: " << arr[curIndex]->name
+                     << "\tRoll.No: " << arr[curIndex]->rollNo;
+                return;
+            }
+        }
+
+        cout << "\nRecord not found";
+    }
+
+    void display()
+    {
+        for (int i = 0; i < 15; i++)
+        {
+            cout << i << ":\t";
+            if (arr[i] == nullptr)
+            {
+                cout << "Empty";
+            }
+            else
+            {
+                cout << "Name: " << arr[i]->name
+                     << "\tRoll.No: " << arr[i]->rollNo;
+            }
+            cout << endl;
         }
     }
 };
+
+int main()
+{
+    HashTable h1;
+    h1.insert("a", 123);
+    h1.insert("b", 124);
+    h1.insert("c", 456);
+
+    h1.display();
+
+    h1.searchRecord(124);
+    h1.searchRecord(789);
+}
